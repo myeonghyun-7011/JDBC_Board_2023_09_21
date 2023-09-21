@@ -15,3 +15,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 title = CONCAT("제목",RAND()),
 `body` = CONCAT("내용",RAND());
+
+SELECT *
+FROM article
+ORDER BY id DESC;

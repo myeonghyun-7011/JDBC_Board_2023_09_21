@@ -14,7 +14,10 @@ public class App {
       System.out.printf("명령어) ");
       String cmd = sc.nextLine();
 
-      if (cmd.equals("/usr/article/write")) {
+      Rq rq = new Rq(cmd);
+
+//--------------------------------    게시물 등록     ------------------------------------------------------------------
+      if (rq.getUrlPath().equals("/usr/article/write")) {
         System.out.println((" == 게시물 등록  ==="));
         System.out.printf("제목 : ");
         String title = sc.nextLine();
@@ -24,7 +27,7 @@ public class App {
         /*int id = articleLastId + 1 ;
         articleLastId++;*/
 
-//-------------------JDBCincline 연결 시작문----------------------------------------------------------------------------------------------
+//--------------------------   게시물 등록 JDBCincline 연결 시작문  ----------------------------------------------------------------------
         Connection conn = null;
         PreparedStatement pstmt = null;
 
@@ -76,9 +79,11 @@ public class App {
         System.out.println("생성된 게시물 객체 : " + article);*/
 
         System.out.printf("%d번 게시물이 등록되었습니다.\n", id);
-      } else if (cmd.equals("/usr/article/list")) {
+      }
 
-//-------------------JDBCSELECTTEST 시작문----------------------------------------------------------------------------------------------        Connection conn = null;
+//----------------- -----------------게시물 리스트 ---------------------------------------------------------------------------
+      else if (rq.getUrlPath().equals("/usr/article/list")) {
+//---------------------------게시물 리스트 JDBCSELECTTEST 시작문------------------------------------------------------------------------------        Connection conn = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -142,9 +147,11 @@ public class App {
             e.printStackTrace();
           }
         }
-//-----------------JDBCSELECTTEST 끝문-------------------------------------------------------------------------------------------------
+//--------------------------------- JDBCSELECTTEST 끝문 ---------------------------------------------------------------------------------
 
-        System.out.println((" == 게시물 리스트  ==="));
+// ---------------------- --------- 게시물 modify --------------------------------------------------------------------------------
+
+        System.out.println((" == 게시물 수정  ==="));
 
         if (articles.isEmpty()) {
           System.out.println("등록된 게시물이 없습니다.");
@@ -155,10 +162,73 @@ public class App {
           System.out.printf("%d / %s\n", article.id, article.title);
         }
 
-      } else if (cmd.equals("system exit")) {
+      }
+      else if (rq.getUrlPath().equals("/usr/article/modify")) {
+        int id = rq.getIntParam("id", 0);
+
+        if(id == 0){
+          System.out.println("id를 올바르게 입력해주세요.");
+          continue;
+        }
+
+        System.out.printf("새 제목 : ");
+        String title = sc.nextLine();
+        System.out.printf("새 내용 : ");
+        String body = sc.nextLine();
+//-----------------------------------------------------------------------------------------------------------------
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+          Class.forName("com.mysql.jdbc.Driver");
+
+          String url = "jdbc:mysql://127.0.0.1:3306/text_board?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+          conn = DriverManager.getConnection(url, "sbsst", "sbs123414");
+
+          String sql = "Update article";
+          sql += " SET regDate = NOW()";
+          sql += ", updateDate = NOW()";
+          sql += " , title = \"" + title + "\" ";
+          sql += " , `body` = \"" + body + "\" ";
+          sql += " WHERE id = " +id;
+
+          System.out.println("sql : " + sql);
+
+          pstmt = conn.prepareStatement(sql);
+          int affectedRows = pstmt.executeUpdate();
+
+          // System.out.println("affectedRows : " + affectedRows);
+
+        } catch (ClassNotFoundException e) {
+          System.out.println("드라이버 로딩 실패");
+        } catch (SQLException e) {
+          System.out.println("에러: " + e);
+        } finally {
+          try {
+            if (conn != null && !conn.isClosed()) {
+              conn.close();
+            }
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+          try {
+            if (pstmt != null && !pstmt.isClosed()) {
+              pstmt.close();
+            }
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+        }
+//------------------------------------------------------------------------------------------------------------------
+        System.out.printf("%d번 게시물이 등록되었습니다.\n", id);
+      }
+//-------------------------- 시스템 종료---------------------------------------------------------------------------------
+      else if (cmd.equals("system exit")) {
         System.out.println("시스템 종료");
         break;
-      } else {
+      }
+      else {
         System.out.println("명령어를 확인해주세요.");
       }
     }

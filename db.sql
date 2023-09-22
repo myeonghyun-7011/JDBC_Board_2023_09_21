@@ -19,3 +19,10 @@ title = CONCAT("제목",RAND()),
 SELECT *
 FROM article
 ORDER BY id DESC;
+
+update article
+set regDate = now(),
+updateDate = now(),
+title = '제목1',
+`body` =  '내용1'
+where id =1;

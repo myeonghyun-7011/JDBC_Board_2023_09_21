@@ -101,7 +101,7 @@ public class App {
       for (Map<String, Object> articleMap : articleListMap) {
         articles.add(new Article(articleMap));
       }
-// ---------------------- --------- 게시물 modify --------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
       System.out.println("== 게시물 리스트 == ");
       if (articles.isEmpty()) {
         System.out.println("등록된 게시물이 없습니다.");
@@ -111,8 +111,37 @@ public class App {
       for (Article article : articles) {
         System.out.printf("%d / %s\n", article.id, article.title);
       }
-
     }
+// ---------------------- --------- 게시물 detail  --------------------------------------------------------------------------------
+    else if (rq.getUrlPath().equals("/usr/article/detail")) {
+      int id = rq.getIntParam("id", 0);
+
+
+      if (id == 0) {
+        System.out.println("id를 올바르게 입력해주세요.");
+        return;
+      }
+//-----------------------------------------------------------------------------------------------------------------
+      SecSql sql = new SecSql();
+      sql.append("SELECT *");
+      sql.append("FROM article");
+      sql.append("WHERE id = ?" ,id);
+
+      Map<String, Object> articleMap =  DBUtil.selectRow(conn, sql);
+      if (articleMap.isEmpty()) {
+        System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+        return;
+      }
+
+      Article article = new Article(articleMap);
+
+      System.out.printf("번호 : %d\n", article.id);
+      System.out.printf("글쓴날짜 : %s\n", article.regDate);
+      System.out.printf("수정날짜: %s\n", article.updateDate);
+      System.out.printf("제목 : %s\n", article.title);
+      System.out.printf("내용 : %s\n", article.body);
+    }
+// ---------------------- --------- 게시물 modify --------------------------------------------------------------------------------
     else if (rq.getUrlPath().equals("/usr/article/modify")) {
       int id = rq.getIntParam("id", 0);
 
@@ -151,7 +180,7 @@ public class App {
 //------------------------------------------------------------------------------------------------------------------
       System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
     }
-//---------------------------------Delete ---------------------------------------------------------------------------------
+//---------------------------------게시물 Delete ---------------------------------------------------------------------------------
     else if (rq.getUrlPath().equals("/usr/article/delete")) {
       int id = rq.getIntParam("id", 0);
 
@@ -183,7 +212,6 @@ public class App {
 //------------------------------------------------------------------------------------------------------------------
       System.out.printf("%d번 게시물이 삭제 되었습니다.\n", id);
     }
-
 //-------------------------- 시스템 종료---------------------------------------------------------------------------------
     else if (cmd.equals("system exit")) {
       System.out.println("시스템 종료");

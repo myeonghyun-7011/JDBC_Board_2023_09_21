@@ -1,22 +1,12 @@
-package org.example.Controller;
+package org.example.controller;
 
-import org.example.Container;
 import org.example.util.DBUtil;
 import org.example.util.SecSql;
 
 import java.sql.Connection;
 import java.util.Scanner;
 
-public class MemberController {
-  private Connection conn;
-  private Scanner scanner;
-  public void setConn(Connection conn) {
-    this.conn = conn;
-  }
-
-  public void setScanner(Scanner scanner) {
-    this.scanner = scanner;
-  }
+public class MemberController  extends Controller{
   public void join() {
     String loginId;
     String loginPw;

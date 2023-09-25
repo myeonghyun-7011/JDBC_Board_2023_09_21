@@ -12,18 +12,11 @@ public abstract class Controller {
   protected Scanner scanner;
   protected Rq rq;
 
-
-  // alt + ins 해서 setter로 생성
-
-  public void setConn(Connection conn) {
+  public Controller(Connection conn, Scanner scanner, Rq rq) {
     this.conn = conn;
-  }
-
-  public void setScanner(Scanner scanner) {
     this.scanner = scanner;
-  }
-  public void setRq(Rq rq) {
     this.rq = rq;
   }
-
 }
+// alt + ins 해서 setter로 생성
+

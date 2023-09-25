@@ -4,10 +4,7 @@ import org.example.util.DBUtil;
 import org.example.util.SecSql;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class App {
   //private int articleLastId = 0;
@@ -58,9 +55,93 @@ public class App {
     }
     sc.close();
   }
+
   private void doAction(Connection conn, Scanner sc, Rq rq, String cmd) {
 
-    if (rq.getUrlPath().equals("/usr/article/write")) {
+//-------------------------------- Member ----------------------------------------------------------------
+    if (rq.getUrlPath().equals("/usr/member/join")) {
+      String loginId;
+      String loginPw;
+      String loginPwConfirm;
+      String name;
+
+      System.out.println((" == 회원 가입  ==="));
+
+      // 로그인 아이디 입력
+      while (true) {
+        System.out.printf("로그인 아이디 : ");
+        loginId = sc.nextLine().trim();
+
+        if (loginId.length() == 0) {
+          System.out.println("로그인 아이디를 입력해주세요. ");
+          continue;
+        }
+        break;
+      }
+      // 로그인 비밀번호 입력
+      while (true) {
+        System.out.printf("로그인 비밀번호 : ");
+        loginPw = sc.nextLine().trim();
+
+        if (loginPw.length() == 0) {
+          System.out.println("로그인 비밀번호를 입력해주세요. ");
+          continue;
+        }
+
+        // 로그인 비밀번호 확인 입력
+        boolean loginPwConfirmIsSame = true;
+
+        while (true) {
+          System.out.printf("로그인 비밀번호 확인 : ");
+          loginPwConfirm = sc.nextLine().trim();
+
+          if (loginPw.length() == 0) {
+            System.out.println("로그인 비밀번호를 입력해주세요. ");
+            continue;
+
+          }
+          if(loginPw.equals(loginPwConfirm) == false ) {
+            System.out.println("로그인 비밀번호가 일치하지 않습니다.");
+            loginPwConfirmIsSame = false;
+            break;
+
+          }
+          break;
+        }
+        if(loginPwConfirmIsSame) {
+          break;
+        }
+      }
+
+      // 이름 입력
+      while (true) {
+        System.out.printf("이름 : ");
+        name = sc.nextLine().trim();
+
+        if (name.length() == 0) {
+          System.out.println("이름을 입력해주세요. ");
+          continue;
+        }
+        break;
+      }
+
+
+      SecSql sql = new SecSql();
+
+      sql.append("INSERT INTO member");
+      sql.append("SET regDate = NOW()");
+      sql.append(", updateDate = NOW()");
+      sql.append(", loginId = ?", loginId);
+      sql.append(", loginPw = ?", loginPw);
+      sql.append(", name = ?", name);
+
+      int id = DBUtil.insert(conn, sql);
+
+      System.out.printf("%d번  회원이 등록되었습니다.\n", id);
+    }
+//--------------------------------게시물 Write----------------------------------------------------------------
+
+    else if (rq.getUrlPath().equals("/usr/article/write")) {
       System.out.println((" == 게시물 등록  ==="));
       System.out.printf("제목 : ");
       String title = sc.nextLine();
@@ -79,7 +160,7 @@ public class App {
 
       int id = DBUtil.insert(conn, sql);
 
-//--------------------------   게시물 등록 JDBCincline 연결 시작문  ----------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------
         /*Article article = new Article(id, title, body);
         articles.add(article);
        // 바깥쪽에 List<Article> articles = new ArrayList<>(); 생성해서 하나씩저장
@@ -125,9 +206,9 @@ public class App {
       SecSql sql = new SecSql();
       sql.append("SELECT *");
       sql.append("FROM article");
-      sql.append("WHERE id = ?" ,id);
+      sql.append("WHERE id = ?", id);
 
-      Map<String, Object> articleMap =  DBUtil.selectRow(conn, sql);
+      Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
       if (articleMap.isEmpty()) {
         System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
         return;

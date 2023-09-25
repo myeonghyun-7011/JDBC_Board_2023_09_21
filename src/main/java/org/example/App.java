@@ -1,15 +1,18 @@
 package org.example;
 
+import org.example.util.DBUtil;
+import org.example.util.SecSql;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class App {
-  private int articleLastId = 0;
+  //private int articleLastId = 0;
   public void run() {
     Scanner sc = Container.scanner;
-
     while (true) {
       System.out.printf("명령어) ");
       String cmd = sc.nextLine();
@@ -63,36 +66,20 @@ public class App {
       String title = sc.nextLine();
       System.out.printf("내용 : ");
       String body = sc.nextLine();
-      int id = ++articleLastId;//같은뜻
+      //int id = ++articleLastId;//같은뜻
         /*int id = articleLastId + 1 ;
         articleLastId++;*/
 
+      SecSql sql = new SecSql();
+      sql.append("INSERT INTO article");
+      sql.append(" SET regDate = NOW()");
+      sql.append(", updateDate = NOW()");
+      sql.append(", title = ?", title);
+      sql.append(", `body` = ?", body);
+
+      int id = DBUtil.insert(conn, sql);
+
 //--------------------------   게시물 등록 JDBCincline 연결 시작문  ----------------------------------------------------------------------
-
-      PreparedStatement pstmt = null;
-      try {
-        String sql = "INSERT INTO article";
-        sql += " SET regDate = NOW()";
-        sql += ", updateDate = NOW()";
-        sql += " , title = \"" + title + "\" ";
-        sql += " , `body` = \"" + body + "\" ";
-
-        pstmt = conn.prepareStatement(sql);
-        pstmt.executeUpdate();
-        // System.out.println("affectedRows : " + affectedRows);
-      } catch (SQLException e) {
-        System.out.println("에러 :" + e);
-      } finally {
-        try {
-          if (pstmt != null && !pstmt.isClosed()) {
-            pstmt.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-//-----------------JDBCincline끝문-------------------------------------------------------------------------------------------------
-
         /*Article article = new Article(id, title, body);
         articles.add(article);
        // 바깥쪽에 List<Article> articles = new ArrayList<>(); 생성해서 하나씩저장
@@ -103,49 +90,23 @@ public class App {
 
 //----------------- -----------------게시물 리스트 ---------------------------------------------------------------------------
     else if (rq.getUrlPath().equals("/usr/article/list")) {
-      PreparedStatement pstmt = null;
-      ResultSet rs = null;
+
       List<Article> articles = new ArrayList<>();
 
 //---------------------------게시물 리스트 JDBCSELECTTEST 시작문-----------------------------------------------------------------------
-      try {
-        String sql = " SELECT *";
-        sql += " FROM article";
-        sql += " ORDER BY id DESC";
+     SecSql sql = new SecSql();
+     sql.append("SELECT *");
+      sql.append("FROM article");
+      sql.append("ORDER BY id DESC");
 
-        System.out.println("sql : " + sql);
-
-        pstmt = conn.prepareStatement(sql);
-        rs = pstmt.executeQuery(sql);
-
-
-        while (rs.next()) {  // 다음장으로 넘김.
-          int id = rs.getInt("id");
-
-          String regDate = rs.getString("regDate");
-          String updateDate = rs.getString("updateDate");
-          String title = rs.getString("title");
-          String body = rs.getString("body");
-
-          Article article = new Article(id, regDate, updateDate, title, body);
-          articles.add(article);
-        }
-      } catch (SQLException e) {
-        System.out.println("에러 :" + e);
-      } finally {
-        try {
-          if (pstmt != null && !pstmt.isClosed()) {
-            pstmt.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
+      List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
+      for(Map<String, Object> articleMap : articleListMap){
+        articles.add(new Article(articleMap));
       }
 
-      System.out.println("== 게시물 리스트 == ");
-//--------------------------------- JDBCSELECTTEST 끝문 ---------------------------------------------------------------------------------
 
 // ---------------------- --------- 게시물 modify --------------------------------------------------------------------------------
+      System.out.println("== 게시물 리스트 == ");
       if (articles.isEmpty()) {
         System.out.println("등록된 게시물이 없습니다.");
         return -1;
@@ -168,32 +129,14 @@ public class App {
       System.out.printf("새 내용 : ");
       String body = sc.nextLine();
 //-----------------------------------------------------------------------------------------------------------------
-      PreparedStatement pstmt = null;
+      SecSql sql = new SecSql();
+      sql.append("UPDATE article");
+      sql.append("SET updateDate = NOW()");
+      sql.append(", title = ?", title);
+      sql.append(", `body` = ?", body);
+      sql.append("WHERE id = ?", id);
 
-      try {
-        String sql = "Update article";
-        sql += " SET regDate = NOW()";
-        sql += ", updateDate = NOW()";
-        sql += " , title = \"" + title + "\" ";
-        sql += " , `body` = \"" + body + "\" ";
-        sql += " WHERE id = " + id;
-
-        System.out.println("sql : " + sql);
-
-        pstmt = conn.prepareStatement(sql);
-        pstmt.executeUpdate();
-        // System.out.println("affectedRows : " + affectedRows);
-      } catch (SQLException e) {
-        System.out.println("에러 :" + e);
-      } finally {
-        try {
-          if (pstmt != null && !pstmt.isClosed()) {
-            pstmt.close();
-          }
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
+      DBUtil.update(conn, sql);
 //------------------------------------------------------------------------------------------------------------------
       System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
     }
@@ -209,33 +152,3 @@ public class App {
 
 }
 
-class Article {
-  public int id;
-  public String title;
-  public String body;
-  public String regDate;
-  public String updateDate;
-
-  public Article(int id, String title, String body) {
-    this.id = id;
-    this.title = title;
-    this.body = body;
-  }
-
-  public Article(int id, String regDate, String updateDate, String title, String body) {
-    this.id = id;
-    this.regDate = regDate;
-    this.updateDate = updateDate;
-    this.title = title;
-    this.body = body;
-  }
-
-  @Override //  개발자 확인겸 디버깅활동에 좋은거
-  public String toString() {
-    return "Article{" +
-        "id=" + id +
-        ", title='" + title + '\'' +
-        ", body='" + body + '\'' +
-        '}';
-  }
-}

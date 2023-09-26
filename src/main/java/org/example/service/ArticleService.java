@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.Article;
+import org.example.dto.Article;
 import org.example.repository.ArticleRepository;
 
 import java.sql.Connection;

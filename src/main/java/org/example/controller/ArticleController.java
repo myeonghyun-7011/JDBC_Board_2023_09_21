@@ -1,16 +1,11 @@
 package org.example.controller;
 
-import org.example.Article;
 import org.example.Rq;
+import org.example.dto.Article;
 import org.example.service.ArticleService;
-import org.example.service.MemberService;
-import org.example.util.DBUtil;
-import org.example.util.SecSql;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class ArticleController extends Controller {

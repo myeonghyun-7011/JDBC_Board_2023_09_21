@@ -1,13 +1,14 @@
-package org.example;
+package org.example.dto;
 
 import java.util.Map;
 
 public class Article {
   public int id;
-  public String title;
-  public String body;
   public String regDate;
   public String updateDate;
+  public String title;
+  public String body;
+
 
   public Article(int id, String title, String body) {
     this.id = id;

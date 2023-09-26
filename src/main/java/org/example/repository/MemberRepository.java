@@ -1,9 +1,11 @@
 package org.example.repository;
 
+import org.example.dto.Member;
 import org.example.util.DBUtil;
 import org.example.util.SecSql;
 
 import java.sql.Connection;
+import java.util.Map;
 
 public class MemberRepository {
   private static Connection conn;
@@ -35,6 +37,22 @@ public class MemberRepository {
     int id = DBUtil.insert(conn, sql);
 
     return id;
+  }
+
+  public Member getMemberByLoginId(String loginId) {
+    SecSql sql = new SecSql();
+
+    sql.append("SELECT *");
+    sql.append("FROM `member`");
+    sql.append("WHERE loginId = ? ", loginId);
+
+    Map<String, Object> memberMap = DBUtil.selectRow(conn, sql);
+
+    if(memberMap.isEmpty()){
+      return null ;
+    }
+
+    return new Member(memberMap);
   }
 }
 

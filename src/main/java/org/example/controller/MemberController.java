@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.Container;
 import org.example.Rq;
 import org.example.dto.Member;
 import org.example.service.MemberService;
@@ -9,12 +10,11 @@ import org.example.util.SecSql;
 import java.sql.Connection;
 import java.util.Scanner;
 
-public class MemberController extends Controller {
+public class MemberController extends Controller{
   private MemberService memberService;
 
-  public MemberController(Connection conn, Scanner sc, Rq rq) {
-    super(conn, sc, rq);
-    memberService = new MemberService(conn);
+  public MemberController() {
+    memberService = Container.memberService;
   }
 
   public void join() {
@@ -28,7 +28,7 @@ public class MemberController extends Controller {
     // 로그인 아이디 입력
     while (true) {
       System.out.printf("로그인 아이디 : ");
-      loginId = scanner.nextLine().trim();
+      loginId = Container.scanner.nextLine().trim();
 
       if (loginId.length() == 0) {
         System.out.println("로그인 아이디를 입력해주세요. ");
@@ -47,7 +47,7 @@ public class MemberController extends Controller {
     // 로그인 비밀번호 입력
     while (true) {
       System.out.printf("로그인 비밀번호 : ");
-      loginPw = scanner.nextLine().trim();
+      loginPw =  Container.scanner.nextLine().trim();
 
       if (loginPw.length() == 0) {
         System.out.println("로그인 비밀번호를 입력해주세요. ");
@@ -59,7 +59,7 @@ public class MemberController extends Controller {
 
       while (true) {
         System.out.printf("로그인 비밀번호 확인 : ");
-        loginPwConfirm = scanner.nextLine().trim();
+        loginPwConfirm =  Container.scanner.nextLine().trim();
 
         if (loginPw.length() == 0) {
           System.out.println("로그인 비밀번호를 입력해주세요. ");
@@ -82,7 +82,7 @@ public class MemberController extends Controller {
     // 이름 입력
     while (true) {
       System.out.printf("이름 : ");
-      name = scanner.nextLine().trim();
+      name =  Container.scanner.nextLine().trim();
 
       if (name.length() == 0) {
         System.out.println("이름을 입력해주세요. ");
@@ -104,7 +104,7 @@ public class MemberController extends Controller {
     System.out.println((" === 로그인  ==="));
 
     System.out.printf("로그인 아이디 : ");
-    loginId = scanner.nextLine().trim();
+    loginId =  Container.scanner.nextLine().trim();
 
     if (loginId.length() == 0) {
       System.out.println("로그인 아이디를 입력해주세요. ");
@@ -128,7 +128,7 @@ public class MemberController extends Controller {
         break;
       }
       System.out.printf("로그인 비밀번호 : ");
-      loginPw = scanner.nextLine().trim();
+      loginPw =  Container.scanner.nextLine().trim();
 
       if (loginPw.length() == 0) {
         System.out.println("로그인 비밀번호를 입력해주세요. ");
@@ -139,8 +139,9 @@ public class MemberController extends Controller {
         tryCount++;
         continue;
       }
-      System.out.printf(" \"%s\" 님 환영합니다.\n", member.getName());
+      break;
     }
+    System.out.printf(" \"%s\" 님 환영합니다.\n", member.getName());
   }
 }
 

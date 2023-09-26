@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.Container;
 import org.example.Rq;
 import org.example.dto.Article;
 import org.example.service.ArticleService;
@@ -12,17 +13,16 @@ public class ArticleController extends Controller {
 
   private ArticleService articleService;
 
-  public ArticleController(Connection conn, Scanner sc, Rq rq) {
-    super(conn, sc, rq);
-    articleService = new ArticleService(conn);
+  public ArticleController(){
+    articleService = Container.articleService;
   }
 
   public void showWrite() {
     System.out.println((" == 게시물 등록  ==="));
     System.out.printf("제목 : ");
-    String title = scanner.nextLine();
+    String title = Container.scanner.nextLine();
     System.out.printf("내용 : ");
-    String body = scanner.nextLine();
+    String body = Container.scanner.nextLine();
 
     // articleService 저장
     int id = articleService.write(title, body);
@@ -47,7 +47,7 @@ public class ArticleController extends Controller {
   }
 
   public void showDetail() {
-    int id = rq.getIntParam("id", 0);
+    int id = Container.rq.getIntParam("id", 0);
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");
@@ -69,7 +69,7 @@ public class ArticleController extends Controller {
   }
 
   public void modify() {
-    int id = rq.getIntParam("id", 0);
+    int id = Container.rq.getIntParam("id", 0);
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");
@@ -84,9 +84,9 @@ public class ArticleController extends Controller {
     }
     System.out.println((" == 게시물 수정  ==="));
     System.out.printf("새 제목 : ");
-    String title = scanner.nextLine();
+    String title = Container.scanner.nextLine();
     System.out.printf("새 내용 : ");
-    String body = scanner.nextLine();
+    String body = Container.scanner.nextLine();
 
     articleService.update(id, title, body);
 
@@ -94,7 +94,7 @@ public class ArticleController extends Controller {
   }
 
   public void delete() {
-    int id = rq.getIntParam("id", 0);
+    int id = Container.rq.getIntParam("id", 0);
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");

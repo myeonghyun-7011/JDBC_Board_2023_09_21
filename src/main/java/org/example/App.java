@@ -11,12 +11,14 @@ import java.util.*;
 public class App {
   //private int articleLastId = 0;
   public void run() {
-    Scanner sc = Container.scanner;
+    Container.scanner = new Scanner(System.in);
+    Container.init(); // init 객체 생성
+
     while (true) {
       System.out.printf("명령어) ");
-      String cmd = sc.nextLine();
+      String cmd = Container.scanner.nextLine();
 
-      Rq rq = new Rq(cmd);
+      Container.rq = new Rq(cmd);
 
       // DB 연결관리
       Connection conn = null;
@@ -35,8 +37,10 @@ public class App {
       try {
         conn = DriverManager.getConnection(url, "sbsst", "sbs123414");
 
+        Container.conn =conn;
+
         // action 메서드 실행
-        action(conn, sc, rq, cmd);
+        action(Container.rq, cmd);
 
       } catch (SQLException e) {
         System.out.println(" 예외 : MYSQL 드라이버 로딩 실패");
@@ -55,33 +59,30 @@ public class App {
         }
       }
     }
-    sc.close();
+    Container.scanner.close();
   }
 
-  private void action(Connection conn, Scanner sc, Rq rq, String cmd) {
-    ArticleController articleController = new ArticleController(conn , sc, rq);
-    MemberController memberController = new MemberController(conn, sc, rq);
-
+  private void action(Rq rq, String cmd) {
     if (cmd.equals("/usr/member/join")) {
-      memberController.join();
+      Container.memberController.join();
     }
     else if (rq.getUrlPath().equals("/usr/member/login")) {
-      memberController.login();
+      Container.memberController.login();
     }
     else if (rq.getUrlPath().equals("/usr/article/write")) {
-      articleController.showWrite();
+      Container.articleController.showWrite();
     }
     else if (rq.getUrlPath().equals("/usr/article/list")) {
-      articleController.showList();
+      Container.articleController.showList();
     }
     else if (rq.getUrlPath().equals("/usr/article/detail")) {
-      articleController.showDetail();
+      Container.articleController.showDetail();
     }
     else if (rq.getUrlPath().equals("/usr/article/modify")) {
-      articleController.modify();
+      Container.articleController.modify();
     }
     else if (rq.getUrlPath().equals("/usr/article/delete")) {
-      articleController.delete();
+      Container.articleController.delete();
     }
 
 //-------------------------- 시스템 종료---------------------------------------------------------------------------------

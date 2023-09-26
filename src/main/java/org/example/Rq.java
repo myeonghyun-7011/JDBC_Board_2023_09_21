@@ -8,6 +8,10 @@ public class Rq {
   Map<String, String> params;
   String urlPath;
 
+  public Rq(){
+
+  }
+
   public Rq(String url) {
     this.url = url;
     params = Util.getUrlParamsFromUrl(this.url);

@@ -29,9 +29,9 @@ public class ArticleController extends Controller {
     System.out.printf("내용 : ");
     String body = Container.scanner.nextLine();
 
-    //int memberId = Container.session.loginedMemberId;
-    // articleService 저장
-    int id = articleService.write(title, body);
+
+    int memberId = Container.session.loginedMemberId;
+    int id = articleService.write(memberId,title, body);// articleService 저장
 
     System.out.printf("%d번 게시물이 등록되었습니다.\n", id);
   }

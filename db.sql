@@ -84,6 +84,7 @@ title = '제목4',
 `body` = '내용4',
 hit = 0;
 
-
-
-
+# 랜덤하게 테스트 데이터 생성
+INSERT INTO article (regDate,updateDate,memberId, title,`body`,hit)
+SELECT NOW(), NOW(), FLOOR(RAND()*10), CONCAT('제목-',FLOOR(RAND()*100)), CONCAT('제목-',FLOOR (RAND()*100)), FLOOR(RAND()*10)
+FROM article;

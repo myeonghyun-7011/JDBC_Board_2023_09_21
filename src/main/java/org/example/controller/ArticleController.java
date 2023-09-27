@@ -6,6 +6,8 @@ import org.example.service.ArticleService;
 
 import java.util.List;
 
+import static org.example.Container.rq;
+
 public class ArticleController {
 
   private ArticleService articleService;
@@ -36,8 +38,15 @@ public class ArticleController {
   public void showList() {
 
     System.out.println("== 게시물 리스트 == ");
+    int page = rq.getIntParam("page", 1);
+    String searchKeyword = rq.getParam("searchKeyword", "" );
 
-    List<Article> articles = articleService.getArticles();
+    int pageItemCount = 10;
+
+    // 임시
+    pageItemCount = 5;
+
+    List<Article> articles = articleService.getForPrintArticleById(page, pageItemCount, searchKeyword);
 
     if (articles.isEmpty()) {
       System.out.println("등록된 게시물이 없습니다.");
@@ -51,7 +60,7 @@ public class ArticleController {
   }
 
   public void showDetail() {
-    int id = Container.rq.getIntParam("id", 0);
+    int id = rq.getIntParam("id", 0);
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");
@@ -82,7 +91,7 @@ public class ArticleController {
       return;
     }
 
-    int id = Container.rq.getIntParam("id", 0);
+    int id = rq.getIntParam("id", 0);
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");
@@ -119,7 +128,7 @@ public class ArticleController {
       System.out.println("로그인 후 이용해주세요.");
       return;
     }
-    int id = Container.rq.getIntParam("id", 0);
+    int id = rq.getIntParam("id", 0);
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");

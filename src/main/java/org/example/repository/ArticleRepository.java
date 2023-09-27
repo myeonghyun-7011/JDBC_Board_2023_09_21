@@ -1,6 +1,5 @@
 package org.example.repository;
 
-import com.mysql.cj.ServerPreparedQuery;
 import org.example.Container;
 import org.example.dto.Article;
 import org.example.util.DBUtil;
@@ -75,14 +74,36 @@ public class ArticleRepository {
     return new Article(articleMap);
   }
 
-  public List<Article> getArticles() {
+  public List<Article> getArticles(Map<String, Object> args, String searchKeyword) {
     SecSql sql = new SecSql();
+
+    if(args.containsKey("searchKeyword")){
+      searchKeyword = (String) args.get("searchKeyword");
+    }
+
+    int limitFrom = -1;
+    int limitTake = -1;
+
+    if(args.containsKey("limitFrom")){
+      limitFrom = (int) args.get("limitFrom");
+    }
+    if(args.containsKey("limitTake")){
+      limitTake = (int) args.get("limitTake");
+    }
+
 
     sql.append("SELECT A.*, M.name AS extra__writerName");
     sql.append("FROM article AS A");
     sql.append("INNER JOIN member AS M");
     sql.append("ON A.memberId = M.id");
+    if(searchKeyword.length() > 0) {
+      sql.append("WHERE A.title LIKE CONCAT('%', ? '%')", searchKeyword);
+    }
     sql.append("ORDER BY A.id DESC");
+
+    if(limitFrom != -1){
+      sql.append("LIMIT ?, ?", limitFrom, limitTake);
+    }
 
     List<Article> articles = new ArrayList<>();
 

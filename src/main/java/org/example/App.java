@@ -69,6 +69,9 @@ public class App {
     else if (rq.getUrlPath().equals("/usr/member/login")) {
       Container.memberController.login();
     }
+    else if (rq.getUrlPath().equals("/usr/member/logout")) {
+      Container.memberController.logout();
+    }
     else if (rq.getUrlPath().equals("/usr/member/whoami")) {
       Container.memberController.whoami();
     }

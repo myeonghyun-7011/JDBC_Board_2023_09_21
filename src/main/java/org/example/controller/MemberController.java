@@ -140,19 +140,24 @@ public class MemberController extends Controller{
         continue;
       }
       System.out.printf(" \"%s\" 님 환영합니다.\n", member.getName());
-      Container.session.loginedMemberId = member.getId();
-      Container.session.loginedMember = member;
+      Container.session.login(member);
 
       break;
     }
   }
   public void whoami() {
-    if(Container.session.loginedMemberId == -1){ // -1은 로그인이 안되어있다.
+    if(Container.session.isLogined() == false){ // -1은 로그인이 안되어있다.
       System.out.println("로그인 상태가 아닙니다.");
     }
     else {
       System.out.println(Container.session.loginedMember.getLoginId());
     }
+  }
+
+  public void logout() {
+    Container.session.logout();
+    System.out.println("로그아웃 되었습니다.");
+
   }
 }
 

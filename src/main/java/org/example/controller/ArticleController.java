@@ -13,11 +13,16 @@ public class ArticleController extends Controller {
 
   private ArticleService articleService;
 
-  public ArticleController(){
+  public ArticleController() {
     articleService = Container.articleService;
   }
 
   public void showWrite() {
+    if (Container.session.isLogined() == false) { //로그인이 안되어있으면,
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
     System.out.println((" == 게시물 등록  ==="));
     System.out.printf("제목 : ");
     String title = Container.scanner.nextLine();
@@ -48,6 +53,11 @@ public class ArticleController extends Controller {
   }
 
   public void showDetail() {
+    if (Container.session.isLogined() == false) { //로그인이 안되어있으면,
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+
+    }
     int id = Container.rq.getIntParam("id", 0);
 
     if (id == 0) {
@@ -70,13 +80,17 @@ public class ArticleController extends Controller {
   }
 
   public void modify() {
+    if (Container.session.isLogined() == false) { //로그인이 안되어있으면,
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
+
     int id = Container.rq.getIntParam("id", 0);
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");
       return;
     }
-
     boolean articleExists = articleService.articleExists(id);
 
     if (articleExists == false) {
@@ -95,6 +109,10 @@ public class ArticleController extends Controller {
   }
 
   public void delete() {
+    if (Container.session.isLogined() == false) { //로그인이 안되어있으면,
+      System.out.println("로그인 후 이용해주세요.");
+      return;
+    }
     int id = Container.rq.getIntParam("id", 0);
 
     if (id == 0) {
@@ -114,9 +132,8 @@ public class ArticleController extends Controller {
 
     System.out.printf("%d번 게시물이 삭제 되었습니다.\n", id);
   }
-
-
 }
+
 
 
 

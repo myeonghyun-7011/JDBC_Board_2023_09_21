@@ -1,15 +1,12 @@
 package org.example.controller;
 
 import org.example.Container;
-import org.example.Rq;
 import org.example.dto.Article;
 import org.example.service.ArticleService;
 
-import java.sql.Connection;
 import java.util.List;
-import java.util.Scanner;
 
-public class ArticleController extends Controller {
+public class ArticleController {
 
   private ArticleService articleService;
 

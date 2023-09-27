@@ -1,16 +1,10 @@
 package org.example.controller;
 
 import org.example.Container;
-import org.example.Rq;
 import org.example.dto.Member;
 import org.example.service.MemberService;
-import org.example.util.DBUtil;
-import org.example.util.SecSql;
 
-import java.sql.Connection;
-import java.util.Scanner;
-
-public class MemberController extends Controller{
+public class MemberController {
   private MemberService memberService;
 
   public MemberController() {

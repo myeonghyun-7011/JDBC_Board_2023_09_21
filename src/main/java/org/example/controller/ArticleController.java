@@ -88,12 +88,21 @@ public class ArticleController {
       System.out.println("id를 올바르게 입력해주세요.");
       return;
     }
-    boolean articleExists = articleService.articleExists(id);
+
+    Article article = articleService.getArticleById(id);// 접근 권한 id 불러오기
+
+    boolean articleExists = articleService.articleExists(id);// id존재여부 확인
 
     if (articleExists == false) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
+
+    if(article.memberId != Container.session.loginedMemberId){
+      System.out.println("권한이 없습니다.");
+      return;
+    }
+
     System.out.println((" == 게시물 수정  ==="));
     System.out.printf("새 제목 : ");
     String title = Container.scanner.nextLine();
@@ -118,10 +127,17 @@ public class ArticleController {
     }
     System.out.printf("== %d번 게시글 삭제 ==\n", id);
 
-    boolean articleExists = articleService.articleExists(id);
+    Article article = articleService.getArticleById(id); // 접근 권한 id 불러오기
+
+    boolean articleExists = articleService.articleExists(id);// id존재여부 확인
 
     if (articleExists == false) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    if(article.memberId != Container.session.loginedMemberId) {
+      System.out.println("권한이 없습니다.");
       return;
     }
 

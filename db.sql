@@ -49,5 +49,6 @@ loginId = 'user2',
 loginPw = 'user2',
 `name` = '홍길순';
 
-SELECT * FROM `member`;
-SELECT * FROM article;
+# 게시물 테이블에 memberID 칼럼 추가
+ALTER TABLE article
+ADD COLUMN memberId INT(10) NOT NULL AFTER updateDate;

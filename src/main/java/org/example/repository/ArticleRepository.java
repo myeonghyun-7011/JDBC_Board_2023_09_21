@@ -5,7 +5,6 @@ import org.example.dto.Article;
 import org.example.util.DBUtil;
 import org.example.util.SecSql;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

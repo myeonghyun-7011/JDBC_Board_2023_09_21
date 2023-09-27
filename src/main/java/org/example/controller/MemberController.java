@@ -118,12 +118,12 @@ public class MemberController extends Controller{
       return;
     }
 
-    int tryMaxCount = 3;
-    int tryCount = 0;
+    int loginTryMaxCount = 3;
+    int loginTryCount = 0;
 
     // 로그인 비밀번호 입력
     while (true) {
-      if (tryCount >= tryMaxCount) {
+      if (loginTryCount >= loginTryMaxCount) {
         System.out.println("비밀번호 확인 후 다음에 시도해주세요");
         break;
       }
@@ -135,13 +135,24 @@ public class MemberController extends Controller{
         continue;
       }
       if (member.getLoginPw().equals(loginPw) == false) {
+        loginTryCount++;
         System.out.println("비밀번호가 일치하지 않습니다. ");
-        tryCount++;
         continue;
       }
+      System.out.printf(" \"%s\" 님 환영합니다.\n", member.getName());
+      Container.session.loginedMemberId = member.getId();
+      Container.session.loginedMember = member;
+
       break;
     }
-    System.out.printf(" \"%s\" 님 환영합니다.\n", member.getName());
+  }
+  public void whoami() {
+    if(Container.session.loginedMemberId == -1){ // -1은 로그인이 안되어있다.
+      System.out.println("로그인 상태가 아닙니다.");
+    }
+    else {
+      System.out.println(Container.session.loginedMember.getLoginId());
+    }
   }
 }
 

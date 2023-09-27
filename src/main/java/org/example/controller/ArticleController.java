@@ -24,6 +24,7 @@ public class ArticleController extends Controller {
     System.out.printf("내용 : ");
     String body = Container.scanner.nextLine();
 
+    //int memberId = Container.session.loginedMemberId;
     // articleService 저장
     int id = articleService.write(title, body);
 

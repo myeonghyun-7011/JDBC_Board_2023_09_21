@@ -4,7 +4,6 @@ import org.example.Container;
 import org.example.dto.Article;
 import org.example.repository.ArticleRepository;
 
-import java.sql.Connection;
 import java.util.List;
 
 public class ArticleService {

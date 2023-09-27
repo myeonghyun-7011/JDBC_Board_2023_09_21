@@ -10,6 +10,9 @@ public class Member {
   private String loginPw;
   private String name;
 
+  public int getId() {
+    return id;
+  }
   public String getLoginId() {
     return loginId;
   }

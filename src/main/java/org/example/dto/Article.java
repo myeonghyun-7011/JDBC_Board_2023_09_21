@@ -10,6 +10,7 @@ public class Article {
   public String title;
   public String body;
   public String extra__writerName;
+  public int hit;
 
 
   public Article(Map<String, Object> articleMap) {
@@ -19,6 +20,7 @@ public class Article {
     this.memberId = (int) articleMap.get("memberId");
     this.title = (String) articleMap.get("title");
     this.body = (String) articleMap.get("body");
+    this.hit = (int) articleMap.get("hit");
 
     if(articleMap.get("extra__writerName") != null){
       this .extra__writerName = (String) articleMap.get("extra__writerName");
@@ -34,6 +36,8 @@ public class Article {
         ", memberId=" + memberId +
         ", title='" + title + '\'' +
         ", body='" + body + '\'' +
+        ", extra__writerName='" + extra__writerName + '\'' +
+        ", hit=" + hit +
         '}';
   }
 }

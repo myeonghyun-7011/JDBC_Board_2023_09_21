@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ArticleService {
   private ArticleRepository articleRepository;
+  private int id;
+
   public ArticleService() {
     articleRepository = Container.articleRepository;
   }
@@ -34,5 +36,9 @@ public class ArticleService {
 
   public List<Article> getArticles() {
     return articleRepository.getArticles();
+  }
+
+  public void increaseHit(int id) {
+    articleRepository.increaseHit(id);
   }
 }

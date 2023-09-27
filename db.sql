@@ -23,18 +23,7 @@ loginPw CHAR(100) NOT NULL,
 `name` CHAR(200) NOT NULL
 );
 
-SELECT COUNT(*) > 0
-FROM `member`
-WHERE loginId = 'user';
-
 #테스트 회원 데이터
-INSERT INTO `member`
-SET regDate = NOW(),
-updateDate = NOW(),
-loginId = 'admin',
-loginPw = 'admin',
-`name` = '관리자';
-
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
@@ -49,6 +38,52 @@ loginId = 'user2',
 loginPw = 'user2',
 `name` = '홍길순';
 
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'user3',
+loginPw = 'user3',
+`name` = '임꺽정';
+
 # 게시물 테이블에 memberID 칼럼 추가
-ALTER TABLE article
-ADD COLUMN memberId INT(10) NOT NULL AFTER updateDate;
+ALTER TABLE article ADD COLUMN memberId INT(10) NOT NULL AFTER updateDate;
+
+#게시물 테이블에 hit 칼럼추가
+ALTER TABLE article ADD COLUMN hit INT(10) NOT NULL AFTER `body`;
+
+# 테스트 게시물 데이터
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+title = '제목1',
+`body` = '내용1',
+hit = 0;
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+title = '제목2',
+`body` = '내용2',
+hit = 0;
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+title = '제목3',
+`body` = '내용3',
+hit = 0;
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+title = '제목4',
+`body` = '내용4',
+hit = 0;
+
+
+
+
